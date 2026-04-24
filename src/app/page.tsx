@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import ReCAPTCHA from 'react-google-recaptcha'
+import Chatbot from '@/components/Chatbot'
 
 const AERIAL_VIDEO = 'https://s3.amazonaws.com/webflow-prod-assets/63c9f9efbe845afa8223d34f/64d69729524ebdedb1d2c6c8_video%20(1080p).mp4'
 const RECAPTCHA_SITE_KEY = '6LcsZQolAAAAAO8G-dPv6EaymZH2AxSTUYB1HgUZ'
@@ -283,6 +284,9 @@ export default function Home() {
           )}
         </div>
       </aside>
+
+      {/* ── Chatbot ── */}
+      <Chatbot />
 
     </main>
   )
