@@ -2,51 +2,99 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 const AERIAL_VIDEO = 'https://s3.amazonaws.com/webflow-prod-assets/63c9f9efbe845afa8223d34f/64d69729524ebdedb1d2c6c8_video%20(1080p).mp4'
-const PORTRAIT_VIDEO = 'https://s3.amazonaws.com/webflow-prod-assets/63c9f9efbe845afa8223d34f/64d69729524ebdedb1d2c6ac_pexels-ivan-samkov-7252718-1080x1920-25fps.mp4'
+const RECAPTCHA_SITE_KEY = '6LcsZQolAAAAAO8G-dPv6EaymZH2AxSTUYB1HgUZ'
 
 export default function Home() {
   const [formOpen, setFormOpen] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const firstInputRef = useRef<HTMLSelectElement>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
 
-  /* Lock body scroll when form is open */
+  const recaptchaRef = useRef<ReCAPTCHA>(null)
+  const firstFieldRef = useRef<HTMLSelectElement>(null)
+
+  /* Lock scroll when form open */
   useEffect(() => {
     document.body.style.overflow = formOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [formOpen])
 
-  /* Auto-focus first field when form opens */
+  /* Auto-focus first field */
   useEffect(() => {
-    if (formOpen) setTimeout(() => firstInputRef.current?.focus(), 350)
+    if (formOpen) setTimeout(() => firstFieldRef.current?.focus(), 350)
   }, [formOpen])
 
   /* Close on Escape */
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setFormOpen(false) }
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') closeForm() }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const closeForm = () => {
+    setFormOpen(false)
+    setError('')
+    setSubmitted(false)
+    recaptchaRef.current?.reset()
+    setCaptchaToken(null)
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setSubmitted(true)
-    setTimeout(() => {
-      setSubmitted(false)
-      setFormOpen(false)
-    }, 2500)
+    setError('')
+
+    if (!captchaToken) {
+      setError('Please complete the reCAPTCHA before submitting.')
+      return
+    }
+
+    const form = e.currentTarget
+    const data = {
+      token: captchaToken,
+      service: (form.elements.namedItem('service') as HTMLSelectElement).value,
+      firstName: (form.elements.namedItem('firstName') as HTMLInputElement).value,
+      lastName: (form.elements.namedItem('lastName') as HTMLInputElement).value,
+      email: (form.elements.namedItem('email') as HTMLInputElement).value,
+      howFound: (form.elements.namedItem('howFound') as HTMLTextAreaElement).value,
+    }
+
+    setLoading(true)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const json = await res.json()
+
+      if (!res.ok) {
+        setError(json.error || 'Something went wrong. Please try again.')
+        recaptchaRef.current?.reset()
+        setCaptchaToken(null)
+      } else {
+        setSubmitted(true)
+        setTimeout(closeForm, 3000)
+      }
+    } catch {
+      setError('Network error. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <main className="font-sans antialiased overflow-x-hidden">
 
-      {/* ═══════════════════════════════════════════════════
-          HERO — full-screen aerial video background
-      ═══════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════
+          HERO
+      ══════════════════════════════════════════════════════ */}
       <section className="relative h-screen flex flex-col overflow-hidden">
 
-        {/* Background aerial video */}
+        {/* Aerial background video */}
         <video
           autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover"
@@ -55,11 +103,11 @@ export default function Home() {
           <source src={AERIAL_VIDEO} type="video/mp4" />
         </video>
 
-        {/* Gradient overlay — heavier at top for nav legibility */}
-        <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/10 to-black/30 pointer-events-none" />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/10 to-black/40 pointer-events-none" />
 
-        {/* ── Navbar ── */}
-        <nav className="relative z-20 flex items-center justify-between px-8 lg:px-14 pt-7 pb-4">
+        {/* Navbar */}
+        <nav className="relative z-20 flex items-center justify-between px-8 lg:px-14 pt-7">
           <Image
             src="/logo.svg"
             alt="HAMID"
@@ -76,60 +124,45 @@ export default function Home() {
           </button>
         </nav>
 
-        {/* ── Hero bottom — intro text + portrait video ── */}
+        {/* Intro — title left, body right, pinned to bottom of hero */}
         <div className="relative z-10 flex-1 flex items-end">
-          <div className="w-full grid md:grid-cols-2">
+          <div className="w-full bg-white px-10 lg:px-16 py-14 grid md:grid-cols-2 gap-10 items-start">
 
-            {/* Left — intro copy on white panel */}
-            <div className="bg-white px-10 lg:px-16 py-14">
-              <h1 className="text-3xl lg:text-4xl font-black leading-snug text-gray-900 mb-5">
-                Welcome to<br />Hamid&apos;s Atelier!
-              </h1>
-              <p className="text-gray-500 text-base leading-relaxed max-w-sm">
-                With more than a decade&apos;s experience in graphic design, UI/UX, and web development, I transform ideas into polished digital experiences. I merge creativity, technology, and a deep understanding of your brand to build custom solutions that captivate your audience and grow your business.
-              </p>
-            </div>
+            {/* Left — title */}
+            <h1 className="text-3xl lg:text-4xl font-black leading-snug text-gray-900">
+              Welcome to<br />Hamid&apos;s Atelier!
+            </h1>
 
-            {/* Right — portrait video */}
-            <div className="relative h-80 md:h-auto overflow-hidden">
-              <video
-                autoPlay muted loop playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-                aria-hidden="true"
-              >
-                <source src={PORTRAIT_VIDEO} type="video/mp4" />
-              </video>
-            </div>
+            {/* Right — body copy */}
+            <p className="text-gray-500 text-base leading-relaxed">
+              With more than a decade&apos;s experience in graphic design, UI/UX, and web development, I transform ideas into polished digital experiences. I merge creativity, technology, and a deep understanding of your brand to craft custom solutions that captivate your audience and drive real growth.
+            </p>
 
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════
+      {/* ══════════════════════════════════════════════════════
           FORM POPUP — slide in from left
-      ═══════════════════════════════════════════════════ */}
+      ══════════════════════════════════════════════════════ */}
 
       {/* Backdrop */}
       <div
         aria-hidden="true"
-        onClick={() => setFormOpen(false)}
-        className={`
-          fixed inset-0 z-40 transition-all duration-500
-          ${formOpen ? 'visible bg-black/60 backdrop-blur-sm' : 'invisible bg-transparent pointer-events-none'}
-        `}
+        onClick={closeForm}
+        className={`fixed inset-0 z-40 transition-all duration-500 ${
+          formOpen ? 'visible bg-black/60 backdrop-blur-sm' : 'invisible bg-transparent pointer-events-none'
+        }`}
       />
 
-      {/* Slide-in panel */}
+      {/* Panel */}
       <aside
         role="dialog"
         aria-modal="true"
         aria-label="Become a client"
-        className={`
-          fixed left-0 top-0 bottom-0 z-50 w-full max-w-120
-          bg-white shadow-2xl overflow-y-auto
-          transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
-          ${formOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
+        className={`fixed left-0 top-0 bottom-0 z-50 w-full max-w-120 bg-white shadow-2xl overflow-y-auto transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          formOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <div className="px-10 pt-10 pb-16">
 
@@ -139,8 +172,8 @@ export default function Home() {
               Become<br />a client
             </h2>
             <button
-              onClick={() => setFormOpen(false)}
-              aria-label="Close form"
+              onClick={closeForm}
+              aria-label="Close"
               className="mt-1 ml-6 shrink-0 w-10 h-10 bg-[#E8432D] hover:bg-[#d03a26] text-white rounded-full flex items-center justify-center transition-colors duration-150"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -149,8 +182,8 @@ export default function Home() {
             </button>
           </div>
 
+          {/* Success state */}
           {submitted ? (
-            /* Success state */
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-6">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -163,10 +196,11 @@ export default function Home() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-8" noValidate>
 
-              {/* Service select */}
+              {/* Service */}
               <div className="border-b border-gray-300 focus-within:border-gray-900 transition-colors pb-1">
                 <select
-                  ref={firstInputRef}
+                  name="service"
+                  ref={firstFieldRef}
                   required
                   defaultValue=""
                   className="w-full bg-transparent text-sm text-gray-600 focus:outline-none py-1 appearance-none cursor-pointer"
@@ -184,6 +218,7 @@ export default function Home() {
               <div className="border-b border-gray-300 focus-within:border-gray-900 transition-colors pb-1">
                 <input
                   type="text"
+                  name="firstName"
                   required
                   placeholder="First Name*"
                   className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none py-1"
@@ -194,6 +229,7 @@ export default function Home() {
               <div className="border-b border-gray-300 focus-within:border-gray-900 transition-colors pb-1">
                 <input
                   type="text"
+                  name="lastName"
                   required
                   placeholder="Last Name*"
                   className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none py-1"
@@ -204,6 +240,7 @@ export default function Home() {
               <div className="border-b border-gray-300 focus-within:border-gray-900 transition-colors pb-1">
                 <input
                   type="email"
+                  name="email"
                   required
                   placeholder="Email*"
                   className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none py-1"
@@ -213,35 +250,33 @@ export default function Home() {
               {/* How did you find me */}
               <div className="border-b border-gray-300 focus-within:border-gray-900 transition-colors pb-1">
                 <textarea
+                  name="howFound"
                   rows={3}
                   placeholder="How did you find me?"
                   className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none resize-none py-1"
                 />
               </div>
 
-              {/* reCAPTCHA-style checkbox */}
-              <div className="border border-gray-200 rounded-md p-4 flex items-center gap-4 bg-gray-50 select-none">
-                <input
-                  type="checkbox"
-                  id="robot-check"
-                  required
-                  className="w-5 h-5 accent-gray-900 cursor-pointer rounded"
-                />
-                <label htmlFor="robot-check" className="text-sm text-gray-700 cursor-pointer">
-                  I&apos;m not a robot
-                </label>
-                <div className="ml-auto flex flex-col items-center">
-                  <div className="w-8 h-8 bg-brand-orange rounded opacity-60" />
-                  <span className="text-[10px] text-gray-400 mt-1">reCAPTCHA</span>
-                </div>
-              </div>
+              {/* reCAPTCHA v2 */}
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={RECAPTCHA_SITE_KEY}
+                onChange={(token) => { setCaptchaToken(token); setError('') }}
+                onExpired={() => setCaptchaToken(null)}
+              />
+
+              {/* Error message */}
+              {error && (
+                <p className="text-sm text-red-600 font-medium">{error}</p>
+              )}
 
               {/* Submit */}
               <button
                 type="submit"
-                className="bg-gray-900 hover:bg-gray-700 text-white font-black text-sm tracking-[0.15em] uppercase px-10 py-4 transition-colors duration-200 rounded"
+                disabled={loading}
+                className="bg-gray-900 hover:bg-gray-700 disabled:bg-gray-400 text-white font-black text-sm tracking-[0.15em] uppercase px-10 py-4 transition-colors duration-200 rounded disabled:cursor-not-allowed"
               >
-                Submit
+                {loading ? 'Sending…' : 'Submit'}
               </button>
 
             </form>
