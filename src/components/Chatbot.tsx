@@ -8,9 +8,16 @@ interface Message {
   content: string
 }
 
+interface ExtractedInfo {
+  name: string | null
+  email: string | null
+  phone: string | null
+  service: string | null
+}
+
 const SUGGESTIONS = [
   'What services do you offer?',
-  'How long does a project take?',
+  'How much does it cost?',
   'How do I get started?',
 ]
 
@@ -34,19 +41,17 @@ function TypingIndicator() {
 function MessageBubble({ msg }: { msg: Message }) {
   const isUser = msg.role === 'user'
   return (
-    <div className={`flex items-end gap-2 mb-4 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
+    <div className={`flex items-end gap-2 mb-4 ${isUser ? 'flex-row-reverse' : ''}`}>
       {!isUser && (
         <div className="w-7 h-7 rounded-full bg-gray-900 flex items-center justify-center shrink-0">
-          <Image src="/chat-logo.svg" alt="Hamid" width={14} height={14} className="brightness-0 invert" />
+          <Image src="/chat-logo.svg" alt="" width={14} height={14} className="brightness-0 invert" />
         </div>
       )}
-      <div
-        className={`max-w-[78%] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
-          isUser
-            ? 'bg-[#E8432D] text-white rounded-2xl rounded-br-sm'
-            : 'bg-gray-100 text-gray-800 rounded-2xl rounded-bl-sm'
-        }`}
-      >
+      <div className={`max-w-[78%] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+        isUser
+          ? 'bg-[#E8432D] text-white rounded-2xl rounded-br-sm'
+          : 'bg-gray-100 text-gray-800 rounded-2xl rounded-bl-sm'
+      }`}>
         {msg.content}
       </div>
     </div>
@@ -59,6 +64,9 @@ export default function Chatbot() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [hasGreeted, setHasGreeted] = useState(false)
+  const [summarySent, setSummarySent] = useState(false)
+  const [collectedInfo, setCollectedInfo] = useState<ExtractedInfo>({ name: null, email: null, phone: null, service: null })
+
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -69,13 +77,13 @@ export default function Chatbot() {
       setTimeout(() => {
         setMessages([{
           role: 'assistant',
-          content: "Hi there! 👋 I'm Hamid's assistant. I can answer questions about services, timelines, process, or anything else about working with Hamid. What would you like to know?",
+          content: "Hey there! 👋 I'm Hamid's AI assistant — basically a very well-trained version of him, minus the coffee addiction. What can I help you with today?",
         }])
-      }, 400)
+      }, 350)
     }
   }, [open, hasGreeted])
 
-  /* Scroll to bottom on new messages */
+  /* Auto-scroll to bottom */
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
@@ -92,6 +100,18 @@ export default function Chatbot() {
     return () => window.removeEventListener('keydown', handler)
   }, [])
 
+  /* Trigger summary email when email is collected for the first time */
+  useEffect(() => {
+    if (collectedInfo.email && !summarySent && messages.length > 1) {
+      setSummarySent(true)
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages, triggerSummary: true }),
+      }).catch(() => {/* silent fail */})
+    }
+  }, [collectedInfo.email, summarySent, messages])
+
   const sendMessage = async (text: string) => {
     const trimmed = text.trim()
     if (!trimmed || loading) return
@@ -105,19 +125,26 @@ export default function Chatbot() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: newMessages.map(m => ({ role: m.role, content: m.content })),
-        }),
+        body: JSON.stringify({ messages: newMessages }),
       })
       const data = await res.json()
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: data.reply ?? data.error ?? 'Sorry, something went wrong.',
-      }])
+
+      const reply = data.reply ?? data.error ?? 'Sorry, something went wrong.'
+      setMessages(prev => [...prev, { role: 'assistant', content: reply }])
+
+      /* Update collected info — merge, never overwrite with null */
+      if (data.extracted) {
+        setCollectedInfo(prev => ({
+          name: data.extracted.name ?? prev.name,
+          email: data.extracted.email ?? prev.email,
+          phone: data.extracted.phone ?? prev.phone,
+          service: data.extracted.service ?? prev.service,
+        }))
+      }
     } catch {
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'Sorry, I ran into an issue. Please try again or email connect@hamidsharifi.com.',
+        content: "Oops — looks like I tripped over a cable. Try again, or just email connect@hamidsharifi.com 😅",
       }])
     } finally {
       setLoading(false)
@@ -129,19 +156,18 @@ export default function Chatbot() {
     sendMessage(input)
   }
 
+  /* Info collection progress — show subtle indicator */
+  const infoCount = [collectedInfo.name, collectedInfo.email, collectedInfo.phone].filter(Boolean).length
+
   return (
     <>
       {/* ── Floating button ── */}
       <button
         onClick={() => setOpen(v => !v)}
-        aria-label={open ? 'Close chat' : 'Open chat'}
-        className={`
-          fixed bottom-6 right-6 z-50
-          w-14 h-14 rounded-full shadow-xl
-          flex items-center justify-center
-          transition-all duration-300
-          ${open ? 'bg-gray-700 scale-90' : 'bg-gray-900 hover:bg-gray-700 hover:scale-110'}
-        `}
+        aria-label={open ? 'Close chat' : 'Chat with Hamid\'s assistant'}
+        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 ${
+          open ? 'bg-gray-700 rotate-90 scale-90' : 'bg-gray-900 hover:bg-gray-700 hover:scale-110'
+        }`}
       >
         {open ? (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
@@ -150,23 +176,17 @@ export default function Chatbot() {
         ) : (
           <Image src="/chat-logo.svg" alt="" width={28} height={28} className="brightness-0 invert" />
         )}
-
-        {/* Unread dot — shows before first open */}
+        {/* Unread dot */}
         {!hasGreeted && (
-          <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-[#E8432D] rounded-full border-2 border-white" />
+          <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-[#E8432D] rounded-full border-2 border-white animate-pulse" />
         )}
       </button>
 
       {/* ── Chat panel ── */}
       <div
-        className={`
-          fixed bottom-24 right-6 z-50
-          w-[360px] max-w-[calc(100vw-24px)]
-          bg-white rounded-2xl shadow-2xl overflow-hidden
-          flex flex-col
-          transition-all duration-300 origin-bottom-right
-          ${open ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}
-        `}
+        className={`fixed bottom-24 right-6 z-50 w-90 max-w-[calc(100vw-24px)] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all duration-300 origin-bottom-right ${
+          open ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'
+        }`}
         style={{ height: '520px' }}
       >
         {/* Header */}
@@ -174,16 +194,30 @@ export default function Chatbot() {
           <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
             <Image src="/chat-logo.svg" alt="" width={18} height={18} className="brightness-0 invert" />
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="text-white text-sm font-bold leading-tight">Hamid&apos;s Assistant</p>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
-              <span className="text-gray-400 text-xs">Online · Replies instantly</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
+              <span className="text-gray-400 text-xs truncate">Online · Replies instantly</span>
             </div>
           </div>
+
+          {/* Info progress dots */}
+          {infoCount > 0 && (
+            <div className="flex gap-1 mr-1" title={`Collected: ${[collectedInfo.name && 'name', collectedInfo.email && 'email', collectedInfo.phone && 'phone'].filter(Boolean).join(', ')}`}>
+              {['name', 'email', 'phone'].map(key => (
+                <span
+                  key={key}
+                  className="w-1.5 h-1.5 rounded-full transition-colors duration-300"
+                  style={{ backgroundColor: collectedInfo[key as keyof ExtractedInfo] ? '#4ade80' : 'rgba(255,255,255,0.2)' }}
+                />
+              ))}
+            </div>
+          )}
+
           <button
             onClick={() => setOpen(false)}
-            className="ml-auto text-gray-400 hover:text-white transition-colors p-1"
+            className="text-gray-400 hover:text-white transition-colors p-1 shrink-0"
             aria-label="Close chat"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -193,8 +227,8 @@ export default function Chatbot() {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-4 py-5 space-y-0">
-          {messages.length === 0 && !loading && (
+        <div className="flex-1 overflow-y-auto px-4 py-5">
+          {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center gap-3 pb-4">
               <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
                 <Image src="/chat-logo.svg" alt="" width={22} height={22} />
@@ -203,23 +237,28 @@ export default function Chatbot() {
             </div>
           )}
 
-          {messages.map((msg, i) => (
-            <MessageBubble key={i} msg={msg} />
-          ))}
-
+          {messages.map((msg, i) => <MessageBubble key={i} msg={msg} />)}
           {loading && <TypingIndicator />}
+
+          {/* Summary sent confirmation */}
+          {summarySent && (
+            <div className="flex items-center gap-1.5 text-xs text-green-600 bg-green-50 rounded-lg px-3 py-2 mb-3">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Your details have been sent to Hamid!
+            </div>
+          )}
 
           <div ref={bottomRef} />
         </div>
 
-        {/* Quick suggestions — show only at start */}
+        {/* Quick suggestions */}
         {messages.length <= 1 && !loading && (
           <div className="px-4 pb-3 flex flex-wrap gap-2 shrink-0">
             {SUGGESTIONS.map(s => (
               <button
                 key={s}
                 onClick={() => sendMessage(s)}
-                className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full transition-colors duration-150 font-medium"
+                className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full transition-colors font-medium"
               >
                 {s}
               </button>
@@ -244,7 +283,7 @@ export default function Chatbot() {
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="w-9 h-9 rounded-full bg-[#E8432D] hover:bg-[#d03a26] disabled:bg-gray-200 flex items-center justify-center transition-colors duration-150 shrink-0"
+            className="w-9 h-9 rounded-full bg-[#E8432D] hover:bg-[#d03a26] disabled:bg-gray-200 flex items-center justify-center transition-colors shrink-0"
             aria-label="Send"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -253,11 +292,8 @@ export default function Chatbot() {
           </button>
         </form>
 
-        {/* Footer branding */}
         <div className="px-4 pb-3 shrink-0">
-          <p className="text-center text-[10px] text-gray-300 font-medium">
-            Powered by Claude AI · hamidsharifi.com
-          </p>
+          <p className="text-center text-[10px] text-gray-300 font-medium">Powered by Claude AI · hamidsharifi.com</p>
         </div>
       </div>
     </>
