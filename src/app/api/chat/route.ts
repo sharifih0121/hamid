@@ -4,52 +4,80 @@ import nodemailer from 'nodemailer'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
-const SYSTEM_PROMPT = `You are the AI assistant on Hamid Sharifi's portfolio website. You speak AS Hamid — first person, warm, honest, a little witty, and always professional. Keep every reply SHORT (2–4 sentences max). No essays. No bullet lists unless truly necessary.
+const SYSTEM_PROMPT = `You are the AI assistant on Hamid Sharifi's portfolio website. You speak AS Hamid — first person, warm, honest, a little witty, and always professional.
 
-## Your personality
-- Honest and direct — never oversell or make things up
-- A little funny — light humour is welcome, but keep it tasteful
-- Warm and encouraging — make people feel excited to work with Hamid
-- Concise — if you can say it in one sentence, do it
+CRITICAL FORMATTING RULE: Never use markdown. No asterisks, no bold, no bullet points with dashes, no headers with #, no backticks. Write in plain conversational sentences only. If you need to list things, use commas or natural sentence structure.
 
-## About Hamid
+Keep every reply SHORT — 2 to 4 sentences max. No essays.
+
+Your personality:
+- Honest and direct. Never oversell.
+- A little funny. Light humour is welcome but keep it tasteful.
+- Warm and encouraging.
+- Concise. If you can say it in one sentence, do it.
+
+About Hamid:
 - 10+ years in graphic design, UI/UX, and web development
 - Based in Winston-Salem, NC
-- Contact: connect@hamidsharifi.com · (336) 926-3255
-- Rating: 4.9/5 across 100+ projects
+- Contact: connect@hamidsharifi.com, phone (336) 926-3255
+- Rating: 4.9 out of 5 across 100+ projects
 
-## Services & Pricing
-All projects start at **$5,000**. Be upfront about this — don't hide it.
-- **Branding** — logo, identity, brand guidelines (from $5k)
-- **UI/UX Design** — research, wireframes, prototypes, design systems (from $5k)
-- **Web Design** — landing pages, full sites, mobile-first (from $5k)
-- **Web Development** — React, Next.js, Webflow, CMS (from $5k)
-- **Full Package** — brand + design + dev — most popular, best value (from $12k)
+Services and Pricing (all projects start from $5,000 — be upfront about this):
+- Branding: logo, identity, brand guidelines, from $5,000
+- UI/UX Design: research, wireframes, prototypes, design systems, from $5,000
+- Web Design: landing pages, full sites, mobile-first, from $5,000
+- Web Development: React, Next.js, Webflow, CMS, from $5,000
+- Full Package (branding + design + development): most popular, best value, from $12,000
 
-## Timelines
-- Branding: 2–4 weeks · UI/UX: 3–5 weeks · Web design: 2–4 weeks · Full site: 4–8 weeks · Full package: 6–10 weeks
+Timelines:
+- Branding: 2 to 4 weeks
+- UI/UX design: 3 to 5 weeks
+- Web design: 2 to 4 weeks
+- Full website: 4 to 8 weeks
+- Full package: 6 to 10 weeks
 
-## Process
-Discovery → Strategy → Design → Development → Testing → Launch → Support
+Process: Discovery, then Strategy, then Design, then Development, then Testing, then Launch, then Support.
 
-## Your mission in this conversation
-Naturally collect the visitor's **name**, **email**, and **phone number** — not all at once, that's creepy. Work it in organically:
-- After the first or second reply, ask their name if they haven't shared it
-- Once you know their name, use it
-- When there's a clear interest in a service, ask for their email so Hamid can follow up
-- If they seem serious, ask for a phone number too — "Hamid loves a quick call to get things moving"
-- Once you have their email, let them know: "Perfect — I'll make sure Hamid gets your details and reaches out within 24 hours."
+Your mission in this conversation — naturally collect the visitor's name, email, and phone number. Not all at once. Work it in organically:
+- After the first reply, casually ask their name if they have not shared it.
+- Once you know their name, use it in replies.
+- When there is clear interest in a service, ask for their email so Hamid can follow up personally.
+- If they seem serious, ask for a phone number — Hamid loves a quick call to get things moving.
+- Once you have their email, confirm: "Perfect, I will make sure Hamid gets your details and reaches out within 24 hours."
 
-## Rules
-- Never make up pricing, timelines, or capabilities beyond what's listed
-- If asked something you don't know, say so and offer to have Hamid reach out
-- Always nudge toward the Get Started button or sharing contact info
-- Don't mention competitors
-- If someone is rude, stay calm and classy`
+Rules:
+- Never make up pricing, timelines, or capabilities beyond what is listed above.
+- If asked something you do not know, say so and offer to have Hamid reach out.
+- Always nudge toward the Get Started button or sharing contact info.
+- Do not mention competitors.
+- If someone is rude, stay calm and classy.`
 
 interface Message {
   role: 'user' | 'assistant'
   content: string
+}
+
+interface DeviceInfo {
+  ip?: string
+  country?: string
+  city?: string
+  region?: string
+  userAgent?: string
+  language?: string
+  timezone?: string
+  screen?: string
+  device?: string
+  referrer?: string
+  url?: string
+  utmSource?: string
+  utmMedium?: string
+  utmCampaign?: string
+  isReturning?: boolean
+  chatOpenCount?: number
+  sessionDuration?: string
+  scrollDepth?: string
+  timeToFirstMessage?: string
+  localTime?: string
 }
 
 interface ExtractedInfo {
@@ -59,9 +87,26 @@ interface ExtractedInfo {
   service: string | null
 }
 
-/* ── Extract contact info from conversation ── */
+/* Strip any markdown that sneaks through */
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/__(.*?)__/g, '$1')
+    .replace(/_(.*?)_/g, '$1')
+    .replace(/#{1,6}\s+/g, '')
+    .replace(/`{1,3}[^`]*`{1,3}/g, (m) => m.replace(/`/g, ''))
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .trim()
+}
+
+/* Extract contact info using fast model */
 async function extractContactInfo(messages: Message[]): Promise<ExtractedInfo> {
-  const transcript = messages.map(m => `${m.role === 'user' ? 'Visitor' : 'Assistant'}: ${m.content}`).join('\n')
+  const transcript = messages
+    .map(m => `${m.role === 'user' ? 'Visitor' : 'Assistant'}: ${m.content}`)
+    .join('\n')
 
   try {
     const res = await client.messages.create({
@@ -69,111 +114,117 @@ async function extractContactInfo(messages: Message[]): Promise<ExtractedInfo> {
       max_tokens: 150,
       messages: [{
         role: 'user',
-        content: `Extract contact info from this chat. Reply with ONLY valid JSON, no explanation:\n{"name":null,"email":null,"phone":null,"service":null}\n\nChat:\n${transcript}`,
+        content: `Extract contact info from this conversation. Return ONLY valid JSON with no explanation: {"name":null,"email":null,"phone":null,"service":null}\n\nConversation:\n${transcript}`,
       }],
     })
-
-    const text = res.content[0].type === 'text' ? res.content[0].text.trim() : '{}'
-    const json = text.match(/\{[\s\S]*\}/)
-    return json ? JSON.parse(json[0]) : { name: null, email: null, phone: null, service: null }
+    const raw = res.content[0].type === 'text' ? res.content[0].text.trim() : '{}'
+    const match = raw.match(/\{[\s\S]*\}/)
+    return match ? JSON.parse(match[0]) : { name: null, email: null, phone: null, service: null }
   } catch {
     return { name: null, email: null, phone: null, service: null }
   }
 }
 
-/* ── Send summary email to Hamid ── */
-async function sendSummaryEmail(messages: Message[], info: ExtractedInfo) {
+/* Build HTML row helper */
+function row(label: string, value: string, shade = false) {
+  return `<tr style="background:${shade ? '#fafafa' : '#fff'};">
+    <td style="padding:10px 16px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;width:38%;border-bottom:1px solid #f0f0f0;vertical-align:top;">${label}</td>
+    <td style="padding:10px 16px;font-size:13px;color:#111;border-bottom:1px solid #f0f0f0;">${value || '—'}</td>
+  </tr>`
+}
+
+/* Send summary email */
+async function sendSummaryEmail(messages: Message[], info: ExtractedInfo, device: DeviceInfo) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
-    },
+    auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD },
   })
 
   const transcript = messages
-    .map(m => `<tr style="background:${m.role === 'user' ? '#f9fafb' : '#fff'};">
-      <td style="padding:10px 16px;font-size:12px;font-weight:700;color:${m.role === 'user' ? '#E8432D' : '#6B3FA0'};text-transform:uppercase;width:80px;vertical-align:top;">
-        ${m.role === 'user' ? 'Visitor' : 'Hamid AI'}
-      </td>
-      <td style="padding:10px 16px;font-size:13px;color:#374151;line-height:1.6;">${m.content.replace(/\n/g, '<br/>')}</td>
+    .map(m => `<tr style="background:${m.role === 'user' ? '#fef9f9' : '#fff'};">
+      <td style="padding:10px 14px;font-size:11px;font-weight:700;color:${m.role === 'user' ? '#E8432D' : '#6B3FA0'};text-transform:uppercase;width:80px;vertical-align:top;border-bottom:1px solid #f5f5f5;">${m.role === 'user' ? 'Visitor' : 'Hamid AI'}</td>
+      <td style="padding:10px 14px;font-size:13px;color:#374151;line-height:1.6;border-bottom:1px solid #f5f5f5;">${m.content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br/>')}</td>
     </tr>`)
     .join('')
 
-  const html = `
-<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"/></head>
 <body style="margin:0;padding:0;background:#f4f4f5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:40px 16px;">
-    <tr><td align="center">
-      <table width="100%" style="max-width:600px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:40px 16px;">
+<tr><td align="center">
+<table width="100%" style="max-width:620px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
 
-        <!-- Header -->
-        <tr>
-          <td style="background:#111;padding:28px 36px;">
-            <p style="margin:0;color:#fff;font-size:20px;font-weight:900;">HAMID</p>
-            <p style="margin:6px 0 0;color:#888;font-size:13px;">New chatbot lead from hamidsharifi.com</p>
-          </td>
-        </tr>
+  <tr><td style="background:#111;padding:28px 36px;">
+    <p style="margin:0;color:#fff;font-size:20px;font-weight:900;">HAMID</p>
+    <p style="margin:5px 0 0;color:#888;font-size:13px;">Chatbot lead — hamidsharifi.com</p>
+  </td></tr>
 
-        <!-- Contact info -->
-        <tr>
-          <td style="padding:28px 36px 0;">
-            <p style="margin:0 0 16px;font-size:18px;font-weight:800;color:#111;">Lead Summary 🎯</p>
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin-bottom:28px;">
-              ${[
-                ['Name', info.name || '—'],
-                ['Email', info.email ? `<a href="mailto:${info.email}" style="color:#E8432D;">${info.email}</a>` : '—'],
-                ['Phone', info.phone ? `<a href="tel:${info.phone}" style="color:#E8432D;">${info.phone}</a>` : '—'],
-                ['Service interest', info.service || '—'],
-              ].map(([label, value], i) => `
-              <tr style="background:${i % 2 === 0 ? '#fafafa' : '#fff'};">
-                <td style="padding:12px 16px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;width:36%;border-bottom:1px solid #f0f0f0;">${label}</td>
-                <td style="padding:12px 16px;font-size:13px;color:#111;border-bottom:1px solid #f0f0f0;">${value}</td>
-              </tr>`).join('')}
-            </table>
-          </td>
-        </tr>
+  <tr><td style="padding:28px 36px 0;">
+    <p style="margin:0 0 16px;font-size:17px;font-weight:800;color:#111;">Lead Summary 🎯</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin-bottom:24px;">
+      ${row('Name', info.name || '—', true)}
+      ${row('Email', info.email ? `<a href="mailto:${info.email}" style="color:#E8432D;">${info.email}</a>` : '—')}
+      ${row('Phone', info.phone ? `<a href="tel:${info.phone}" style="color:#E8432D;">${info.phone}</a>` : '—', true)}
+      ${row('Service interest', info.service || '—')}
+    </table>
+  </td></tr>
 
-        <!-- Transcript -->
-        <tr>
-          <td style="padding:0 36px 28px;">
-            <p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.06em;">Full conversation</p>
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
-              ${transcript}
-            </table>
-          </td>
-        </tr>
+  <tr><td style="padding:0 36px 0;">
+    <p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.06em;">Device &amp; Location</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin-bottom:24px;">
+      ${row('IP address', device.ip || '—', true)}
+      ${row('Location', [device.city, device.region, device.country].filter(Boolean).join(', ') || '—')}
+      ${row('Device', device.device || '—', true)}
+      ${row('Browser / OS', device.userAgent ? device.userAgent.substring(0, 80) + '…' : '—')}
+      ${row('Screen', device.screen || '—', true)}
+      ${row('Language', device.language || '—')}
+      ${row('Timezone', device.timezone || '—', true)}
+      ${row('Local time', device.localTime || '—')}
+    </table>
+  </td></tr>
 
-        ${info.email ? `
-        <!-- Reply CTA -->
-        <tr>
-          <td style="padding:0 36px 32px;text-align:center;">
-            <a href="mailto:${info.email}" style="display:inline-block;background:#E8432D;color:#fff;font-size:13px;font-weight:700;padding:13px 32px;border-radius:6px;text-decoration:none;">
-              Reply to ${info.name || 'this visitor'} →
-            </a>
-          </td>
-        </tr>` : ''}
+  <tr><td style="padding:0 36px 0;">
+    <p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.06em;">Session &amp; Source</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin-bottom:24px;">
+      ${row('Referrer', device.referrer || 'Direct')}
+      ${row('UTM Source', device.utmSource || '—', true)}
+      ${row('UTM Medium', device.utmMedium || '—')}
+      ${row('UTM Campaign', device.utmCampaign || '—', true)}
+      ${row('Returning visitor', device.isReturning ? 'Yes' : 'First visit')}
+      ${row('Chat opens', String(device.chatOpenCount || 1), true)}
+      ${row('Session duration', device.sessionDuration || '—')}
+      ${row('Scroll depth', device.scrollDepth || '—', true)}
+      ${row('Time to first msg', device.timeToFirstMessage || '—')}
+      ${row('Page URL', device.url ? `<a href="${device.url}" style="color:#6B3FA0;">${device.url}</a>` : '—')}
+    </table>
+  </td></tr>
 
-        <!-- Footer -->
-        <tr>
-          <td style="background:#f9fafb;padding:16px 36px;border-top:1px solid #e5e7eb;">
-            <p style="margin:0;font-size:11px;color:#9ca3af;text-align:center;">Chatbot lead from <strong>hamidsharifi.com</strong></p>
-          </td>
-        </tr>
+  <tr><td style="padding:0 36px 20px;">
+    <p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.06em;">Full Conversation (${messages.length} messages)</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+      ${transcript}
+    </table>
+  </td></tr>
 
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`
+  ${info.email ? `<tr><td style="padding:0 36px 28px;text-align:center;">
+    <a href="mailto:${info.email}" style="display:inline-block;background:#E8432D;color:#fff;font-size:13px;font-weight:700;padding:12px 30px;border-radius:6px;text-decoration:none;">Reply to ${info.name || 'this visitor'} →</a>
+  </td></tr>` : ''}
+
+  <tr><td style="background:#f9fafb;padding:16px 36px;border-top:1px solid #e5e7eb;">
+    <p style="margin:0;font-size:11px;color:#9ca3af;text-align:center;">Chatbot lead from <strong>hamidsharifi.com</strong></p>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>`
 
   await transporter.sendMail({
     from: `"Hamid's Chatbot" <${process.env.GMAIL_USER}>`,
     to: 'hamid54888@gmail.com',
     replyTo: info.email ?? undefined,
-    subject: `Chatbot lead: ${info.name ?? 'New visitor'} — ${info.service ?? 'General inquiry'}`,
+    subject: `Chatbot lead: ${info.name ?? 'New visitor'}${info.service ? ` — ${info.service}` : ''}`,
     html,
   })
 }
@@ -181,30 +232,43 @@ async function sendSummaryEmail(messages: Message[], info: ExtractedInfo) {
 /* ── Main handler ── */
 export async function POST(request: Request) {
   try {
-    const { messages, triggerSummary } = await request.json()
+    const body = await request.json()
+    const { messages, triggerSummary, deviceInfo } = body
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'Invalid request.' }, { status: 400 })
     }
 
-    /* Just send summary email (no new AI message needed) */
+    /* Enrich device info with server-side headers */
+    const serverDevice: DeviceInfo = {
+      ...deviceInfo,
+      ip: request.headers.get('x-forwarded-for')?.split(',')[0].trim()
+        || request.headers.get('x-real-ip')
+        || 'unknown',
+      country: request.headers.get('x-vercel-ip-country') || deviceInfo?.country,
+      city: decodeURIComponent(request.headers.get('x-vercel-ip-city') || deviceInfo?.city || ''),
+      region: request.headers.get('x-vercel-ip-region') || deviceInfo?.region,
+    }
+
+    /* Just send summary (no new AI message) */
     if (triggerSummary) {
       const info = await extractContactInfo(messages)
-      await sendSummaryEmail(messages, info)
+      await sendSummaryEmail(messages, info, serverDevice)
       return NextResponse.json({ success: true })
     }
 
     /* Generate AI reply */
     const response = await client.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 300,
+      max_tokens: 250,
       system: SYSTEM_PROMPT,
       messages,
     })
 
-    const reply = response.content[0].type === 'text' ? response.content[0].text : ''
+    const rawReply = response.content[0].type === 'text' ? response.content[0].text : ''
+    const reply = stripMarkdown(rawReply)
 
-    /* Extract contact info from full conversation including new reply */
+    /* Extract contact info from full conversation */
     const fullMessages: Message[] = [...messages, { role: 'assistant', content: reply }]
     const extracted = await extractContactInfo(fullMessages)
 
