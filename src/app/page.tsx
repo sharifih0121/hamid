@@ -127,10 +127,10 @@ export default function Home() {
 
         {/* Intro — title left, body right, pinned to bottom of hero */}
         <div className="relative z-10 flex-1 flex items-end">
-          <div className="w-full bg-white px-10 lg:px-16 py-14 grid md:grid-cols-2 gap-10 items-start">
+          <div className="w-full bg-white px-8 lg:px-16 py-14 grid md:grid-cols-2 gap-4 items-start">
 
             {/* Left — title */}
-            <h1 className="text-3xl lg:text-4xl font-black leading-snug text-gray-900">
+            <h1 className="text-3xl lg:text-4xl font-bold leading-snug text-gray-900">
               Welcome to<br />Hamid&apos;s Atelier!
             </h1>
 
