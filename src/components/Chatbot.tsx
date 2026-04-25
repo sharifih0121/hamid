@@ -396,7 +396,7 @@ export default function Chatbot() {
               onChange={e => setInput(e.target.value)}
               placeholder="Ask me anything…"
               disabled={loading}
-              className="flex-1 text-sm text-gray-900 placeholder-gray-400 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 focus:outline-none focus:border-gray-400 transition-colors disabled:opacity-50"
+              className="flex-1 text-base sm:text-sm text-gray-900 placeholder-gray-400 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 focus:outline-none focus:border-gray-400 transition-colors disabled:opacity-50"
             />
             <button type="submit" disabled={!input.trim() || loading}
               className="w-9 h-9 rounded-full bg-[#E8432D] hover:bg-[#d03a26] disabled:bg-gray-200 flex items-center justify-center transition-colors shrink-0"
