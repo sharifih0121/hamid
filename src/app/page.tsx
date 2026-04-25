@@ -135,7 +135,7 @@ export default function Home() {
             </h1>
 
             {/* Right — body copy */}
-            <p className="text-gray-900 leading-relaxed" style={{ fontSize: '1.2rem' }}>
+            <p className="text-gray-900 leading-relaxed text-balance" style={{ fontSize: '1.2rem' }}>
               Since 2007, I have shaped ideas into refined digital experiences across graphic design, UI, UX, and web development. I combine creative thinking with technical skill and a clear understanding of your brand to build custom solutions that engage your audience and support real business growth.
             </p>
 
