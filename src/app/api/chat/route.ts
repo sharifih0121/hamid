@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import nodemailer from 'nodemailer'
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+// ── Switch provider here: 'claude' | 'gemini' ──
+const AI_PROVIDER = (process.env.AI_PROVIDER || 'claude') as 'claude' | 'gemini'
+
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const geminiClient = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
 const SYSTEM_PROMPT = `You are the AI assistant on Hamid Sharifi's portfolio website. You speak AS Hamid, first person, warm, honest, and professional.
 
@@ -118,20 +123,27 @@ function stripMarkdown(text: string): string {
     .trim()
 }
 
-/* Extract contact info using fast model */
+/* Extract contact info — uses Claude Haiku if available, else Gemini */
 async function extractContactInfo(messages: Message[]): Promise<ExtractedInfo> {
   const transcript = messages
     .map(m => `${m.role === 'user' ? 'Visitor' : 'Assistant'}: ${m.content}`)
     .join('\n')
 
+  const prompt = `Extract contact info from this conversation. Return ONLY valid JSON with no explanation: {"name":null,"email":null,"phone":null,"service":null}\n\nConversation:\n${transcript}`
+
   try {
-    const res = await client.messages.create({
+    if (AI_PROVIDER === 'gemini') {
+      const model = geminiClient.getGenerativeModel({ model: 'gemini-2.0-flash' })
+      const result = await model.generateContent(prompt)
+      const raw = result.response.text().trim()
+      const match = raw.match(/\{[\s\S]*\}/)
+      return match ? JSON.parse(match[0]) : { name: null, email: null, phone: null, service: null }
+    }
+
+    const res = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 150,
-      messages: [{
-        role: 'user',
-        content: `Extract contact info from this conversation. Return ONLY valid JSON with no explanation: {"name":null,"email":null,"phone":null,"service":null}\n\nConversation:\n${transcript}`,
-      }],
+      messages: [{ role: 'user', content: prompt }],
     })
     const raw = res.content[0].type === 'text' ? res.content[0].text.trim() : '{}'
     const match = raw.match(/\{[\s\S]*\}/)
@@ -274,14 +286,31 @@ export async function POST(request: Request) {
     }
 
     /* Generate AI reply */
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 250,
-      system: SYSTEM_PROMPT,
-      messages,
-    })
+    let rawReply = ''
 
-    const rawReply = response.content[0].type === 'text' ? response.content[0].text : ''
+    if (AI_PROVIDER === 'gemini') {
+      const model = geminiClient.getGenerativeModel({
+        model: 'gemini-2.0-flash',
+        systemInstruction: SYSTEM_PROMPT,
+      })
+      const history = messages.slice(0, -1).map(m => ({
+        role: m.role === 'user' ? 'user' : 'model',
+        parts: [{ text: m.content }],
+      }))
+      const chat = model.startChat({ history })
+      const lastMsg = messages[messages.length - 1].content
+      const result = await chat.sendMessage(lastMsg)
+      rawReply = result.response.text()
+    } else {
+      const response = await anthropic.messages.create({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 250,
+        system: SYSTEM_PROMPT,
+        messages,
+      })
+      rawReply = response.content[0].type === 'text' ? response.content[0].text : ''
+    }
+
     const reply = stripMarkdown(rawReply)
 
     /* Extract contact info from full conversation */
