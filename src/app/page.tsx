@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import ReCAPTCHA from 'react-google-recaptcha'
 import Chatbot from '@/components/Chatbot'
+import HeroRipple from '@/components/HeroRipple'
 
 const AERIAL_VIDEO = 'https://s3.amazonaws.com/webflow-prod-assets/63c9f9efbe845afa8223d34f/64d69729524ebdedb1d2c6c8_video%20(1080p).mp4'
 const RECAPTCHA_SITE_KEY = '6LcsZQolAAAAAO8G-dPv6EaymZH2AxSTUYB1HgUZ'
@@ -31,7 +32,7 @@ export default function Home() {
 
   /* Close on Escape */
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') closeForm() }
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setFormOpen(false) }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [])
@@ -107,6 +108,9 @@ export default function Home() {
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/10 to-black/40 pointer-events-none" />
 
+        {/* Water ripple effect */}
+        <HeroRipple />
+
         {/* Navbar */}
         <nav className="relative z-20 flex items-center justify-between px-8 lg:px-14 pt-7">
           <Image
@@ -169,7 +173,7 @@ export default function Home() {
 
           {/* Header */}
           <div className="flex items-start justify-between mb-10">
-            <h2 className="text-4xl lg:text-5xl font-black text-gray-900 leading-tight">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
               Become<br />a client
             </h2>
             <button
