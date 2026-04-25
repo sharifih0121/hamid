@@ -353,6 +353,7 @@ export async function POST(request: Request) {
       const model = geminiClient.getGenerativeModel({
         model: 'gemini-flash-latest',
         systemInstruction: SYSTEM_PROMPT,
+        generationConfig: { thinkingConfig: { thinkingBudget: 0 } } as object,
       })
       const allHistory = messages.slice(0, -1).map(m => ({
         role: m.role === 'user' ? 'user' : 'model',
