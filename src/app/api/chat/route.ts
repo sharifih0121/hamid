@@ -194,7 +194,7 @@ async function extractContactInfo(messages: Message[]): Promise<ExtractedInfo> {
 
   try {
     if (AI_PROVIDER === 'gemini') {
-      const model = geminiClient.getGenerativeModel({ model: 'gemini-2.0-flash' })
+      const model = geminiClient.getGenerativeModel({ model: 'gemini-flash-latest' })
       const result = await model.generateContent(prompt)
       const raw = result.response.text().trim()
       const match = raw.match(/\{[\s\S]*\}/)
@@ -351,7 +351,7 @@ export async function POST(request: Request) {
 
     if (AI_PROVIDER === 'gemini') {
       const model = geminiClient.getGenerativeModel({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-flash-latest',
         systemInstruction: SYSTEM_PROMPT,
       })
       const allHistory = messages.slice(0, -1).map(m => ({
