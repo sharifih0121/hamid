@@ -37,7 +37,7 @@ interface DeviceInfo {
 const MAX_USER_MESSAGES = 20
 
 const LIMIT_MESSAGE =
-  "It's been such a pleasure chatting with you! I've passed everything along to Hamid and he'll be reaching out to you personally very soon. Keep an eye on your inbox! In the meantime, feel free to explore the portfolio or reach out directly at connect@hamidsharifi.com. Have a wonderful day! 😊"
+  "It has been great talking with you. Hamid has your details and will reach out soon. You can also contact him directly at connect@hamidsharifi.com."
 
 const SUGGESTIONS = [
   'What services do you offer?',
@@ -159,7 +159,7 @@ export default function Chatbot() {
       setTimeout(() => {
         setMessages([{
           role: 'assistant',
-          content: "Hey there! 👋 I'm Hamid's AI assistant — basically a very well-trained version of him, minus the coffee addiction. What can I help you with today?",
+          content: "Hey there! 👋 I'm Hamid's assistant. Ask me about services, pricing, or how to get started.",
         }])
       }, 350)
     }
@@ -279,8 +279,8 @@ export default function Chatbot() {
       <button
         onClick={() => setOpen(v => !v)}
         aria-label={open ? 'Close chat' : "Chat with Hamid's assistant"}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 ${
-          open ? 'bg-gray-700 scale-90' : 'bg-gray-900 hover:bg-gray-700 hover:scale-110'
+        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-xl items-center justify-center transition-all duration-300 ${
+          open ? 'bg-gray-700 scale-90 hidden sm:flex' : 'flex bg-gray-900 hover:bg-gray-700 hover:scale-110'
         }`}
       >
         {open ? (
@@ -297,10 +297,11 @@ export default function Chatbot() {
 
       {/* ── Chat panel ── */}
       <div
-        className={`fixed bottom-24 right-6 z-50 w-90 max-w-[calc(100vw-24px)] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all duration-300 origin-bottom-right ${
-          open ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'
-        }`}
-        style={{ height: '520px' }}
+        className={`fixed z-50 bg-white shadow-2xl overflow-hidden flex flex-col transition-all duration-300
+          inset-x-0 bottom-0 rounded-t-2xl
+          sm:inset-x-auto sm:bottom-24 sm:right-6 sm:w-90 sm:rounded-2xl sm:origin-bottom-right
+          ${open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'}`}
+        style={{ height: 'min(85vh, 520px)' }}
       >
         {/* Header */}
         <div className="bg-gray-900 px-5 py-4 flex items-center gap-3 shrink-0">
@@ -409,7 +410,7 @@ export default function Chatbot() {
 
         {/* Footer */}
         <div className="px-4 pb-3 shrink-0 flex items-center justify-between">
-          <p className="text-[10px] text-gray-300 font-medium">Powered by Claude AI</p>
+          <p className="text-[10px] text-gray-300 font-medium">Powered by Hamid</p>
           {!limitReached && userMessageCount.current >= MAX_USER_MESSAGES - 5 && (
             <p className="text-[10px] text-gray-300">{msgsLeft} replies left</p>
           )}
