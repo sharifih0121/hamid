@@ -71,7 +71,7 @@ function MessageBubble({ msg }: { msg: Message }) {
           <Image src="/chat-logo.svg" alt="" width={14} height={14} className="brightness-0 invert" />
         </div>
       )}
-      <div className={`max-w-[78%] px-4 py-3 text-sm leading-relaxed ${
+      <div className={`max-w-[78%] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
         isUser
           ? 'bg-[#E8432D] text-white rounded-2xl rounded-br-sm'
           : 'bg-gray-100 text-gray-800 rounded-2xl rounded-bl-sm'
