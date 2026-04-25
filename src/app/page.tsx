@@ -135,8 +135,8 @@ export default function Home() {
             </h1>
 
             {/* Right — body copy */}
-            <p className="text-gray-500 text-base leading-relaxed">
-              With more than a decade&apos;s experience in graphic design, UI/UX, and web development, I transform ideas into polished digital experiences. I merge creativity, technology, and a deep understanding of your brand to craft custom solutions that captivate your audience and drive real growth.
+            <p className="text-gray-900 leading-relaxed" style={{ fontSize: '1.2rem' }}>
+              Since 2007, I have shaped ideas into refined digital experiences across graphic design, UI, UX, and web development. I combine creative thinking with technical skill and a clear understanding of your brand to build custom solutions that engage your audience and support real business growth.
             </p>
 
           </div>
