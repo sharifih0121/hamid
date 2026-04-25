@@ -135,7 +135,7 @@ export default function Home() {
 
             {/* Left — title */}
             <h1 className="text-3xl lg:text-4xl font-bold leading-snug text-gray-900">
-              Welcome to<br />Hamid&apos;s Atelier!
+              Welcome to <br /> Hamid&apos;s Atelier!
             </h1>
 
             {/* Right — body copy */}
@@ -174,7 +174,7 @@ export default function Home() {
           {/* Header */}
           <div className="flex items-start justify-between mb-10">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-              Become<br />a client
+              Become <br />a client
             </h2>
             <button
               onClick={closeForm}
