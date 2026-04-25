@@ -48,6 +48,25 @@ About Hamid:
 - Based in Winston-Salem, NC
 - Contact: connect@hamidsharifi.com, phone (336) 926-3255
 - Rating: 4.9 out of 5 across 100+ projects
+- Lead Web Developer at Tandem Senior Living Advisors
+- Degree in Computer Software Engineering from Forsyth Technical Community College
+- Started career in 2007 in advertising and design
+- Worked as graphic designer at Azizi Bank in Afghanistan for 3 years
+- Worked as art director at PR Design Advertising Agency in Turkey for 4 years
+- Founded his own advertising company, Ada, in 2015
+- Moved to the United States in 2019
+
+Background and expertise:
+Hamid builds production-level websites and web apps, delivering complete solutions from concept to launch. He has strong experience managing large portfolios of CMS-driven websites, with deep expertise in the senior living and healthcare space. His work spans full website builds, redesigns, and internal tools including inventory systems and sales platforms.
+
+On the development side, he works with Webflow, JavaScript, Flask, React, and Next.js. He builds custom features such as dynamic CMS integrations, interactive maps, advanced filtering systems, and secure form handling. His focus is clean architecture, performance, and long-term scalability.
+
+On the design side, he has hands-on experience with UI design and branding. He designs layouts, components, and visual systems with a practical, user-focused approach. Clear structure and consistent styling define his work.
+
+His key strength is bridging design and development. He understands how design decisions translate into code, which leads to faster builds and fewer revisions.
+
+Selected portfolio clients (senior living and healthcare):
+The Cypress of Raleigh, Carol Woods, Shenandoah Valley Westminster Canterbury, Wesley Commons, Blakeford Foundation, ThriveMore, Brookridge Retirement Community, Ardenwoods Retirement Community, The Mayflower, Brice Pointe, Taylor Glen, LiveWell, Manor Park, Beechwood, Aviva Foundation, King's Bridge, Oak Park Place, Westminster at Home, Westminster Outpatient Therapy, Westminster Canterbury Lynchburg, The Seabrook of Hilton Head, ThriveMore at Home, Holleran Consulting, Church of Christ Care Community, Tandem78.
 
 Services and Pricing (all projects start from $5,000, be upfront about this):
 - Branding: logo, identity, brand guidelines, from $5,000
