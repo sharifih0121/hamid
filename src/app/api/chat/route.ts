@@ -293,10 +293,13 @@ export async function POST(request: Request) {
         model: 'gemini-2.0-flash',
         systemInstruction: SYSTEM_PROMPT,
       })
-      const history = messages.slice(0, -1).map(m => ({
+      const allHistory = messages.slice(0, -1).map(m => ({
         role: m.role === 'user' ? 'user' : 'model',
         parts: [{ text: m.content }],
       }))
+      // Gemini history must start with 'user', skip any leading assistant messages
+      const firstUserIdx = allHistory.findIndex(m => m.role === 'user')
+      const history = firstUserIdx >= 0 ? allHistory.slice(firstUserIdx) : []
       const chat = model.startChat({ history })
       const lastMsg = messages[messages.length - 1].content
       const result = await chat.sendMessage(lastMsg)
