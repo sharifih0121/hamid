@@ -213,7 +213,7 @@ export default function Home() {
                   ref={firstFieldRef}
                   required
                   defaultValue=""
-                  className="w-full bg-transparent text-sm text-gray-600 focus:outline-none py-1 appearance-none cursor-pointer"
+                  className="w-full bg-transparent text-gray-600 focus:outline-none py-1 appearance-none cursor-pointer" style={{ fontSize: '1.1rem' }}
                 >
                   <option value="" disabled>Select your preferred service:</option>
                   <option value="branding">Branding</option>
@@ -231,7 +231,7 @@ export default function Home() {
                   name="firstName"
                   required
                   placeholder="First Name*"
-                  className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none py-1"
+                  className="w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none py-1" style={{ fontSize: '1.1rem' }}
                 />
               </div>
 
@@ -242,7 +242,7 @@ export default function Home() {
                   name="lastName"
                   required
                   placeholder="Last Name*"
-                  className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none py-1"
+                  className="w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none py-1" style={{ fontSize: '1.1rem' }}
                 />
               </div>
 
@@ -253,7 +253,7 @@ export default function Home() {
                   name="email"
                   required
                   placeholder="Email*"
-                  className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none py-1"
+                  className="w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none py-1" style={{ fontSize: '1.1rem' }}
                 />
               </div>
 
@@ -263,7 +263,7 @@ export default function Home() {
                   name="howFound"
                   rows={3}
                   placeholder="How did you find me?"
-                  className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none resize-none py-1"
+                  className="w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none resize-none py-1" style={{ fontSize: '1.1rem' }}
                 />
               </div>
 
