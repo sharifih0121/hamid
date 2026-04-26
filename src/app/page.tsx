@@ -94,7 +94,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════
           HERO
       ══════════════════════════════════════════════════════ */}
-      <section className="relative h-screen min-h-100 flex flex-col overflow-hidden">
+      <section className="relative flex flex-col overflow-hidden md:h-screen" style={{ minHeight: '400px' }}>
 
         {/* Aerial background video */}
         <video
@@ -129,26 +129,27 @@ export default function Home() {
           </button>
         </nav>
 
-        {/* Intro — title left, body right, pinned to bottom of hero */}
-        <div className="relative z-10 flex-1 flex items-end">
-          <div className="w-full bg-white px-8 lg:px-16 py-14 grid md:grid-cols-2 gap-4 items-start">
+        {/* Video spacer — pushes intro below, ensures video is visible */}
+        <div className="relative z-10 flex-1" style={{ minHeight: '400px' }} />
 
-            {/* Left — title + verse */}
-            <div>
-              <h1 className="text-3xl lg:text-4xl font-bold leading-snug text-gray-900">
-                Welcome to <br /> Hamid&apos;s Atelier!
-              </h1>
-              <blockquote style={{ marginTop: '1.5rem', fontSize: '1.1rem', color: '#333333' }} className="italic leading-relaxed text-balance">
-                &ldquo;Whatever you do, work at it with all your heart, as working for the Lord, not for human masters&rdquo; &mdash; Colossians 3:23
-              </blockquote>
-            </div>
+        {/* Intro — title left, body right */}
+        <div className="relative z-10 w-full bg-white px-8 lg:px-16 py-14 grid md:grid-cols-2 gap-4 items-start">
 
-            {/* Right — body copy */}
-            <p className="text-gray-900 leading-relaxed text-balance" style={{ fontSize: '1.2rem' }}>
-              Since 2007, I have shaped ideas into refined digital experiences across graphic design, UI, UX, and web development. I combine creative thinking with technical skill and a clear understanding of your brand to build custom solutions that engage your audience and support real business growth.
-            </p>
-
+          {/* Left — title + verse */}
+          <div>
+            <h1 className="text-3xl lg:text-4xl font-bold leading-snug text-gray-900">
+              Welcome to <br /> Hamid&apos;s Atelier!
+            </h1>
+            <blockquote style={{ marginTop: '1.5rem', fontSize: '1.1rem', color: '#333333' }} className="italic leading-relaxed text-balance">
+              &ldquo;Whatever you do, work at it with all your heart, as working for the Lord, not for human masters&rdquo; &mdash; Colossians 3:23
+            </blockquote>
           </div>
+
+          {/* Right — body copy */}
+          <p className="text-gray-900 leading-relaxed text-balance" style={{ fontSize: '1.2rem' }}>
+            Since 2007, I have shaped ideas into refined digital experiences across graphic design, UI, UX, and web development. I combine creative thinking with technical skill and a clear understanding of your brand to build custom solutions that engage your audience and support real business growth.
+          </p>
+
         </div>
       </section>
 
