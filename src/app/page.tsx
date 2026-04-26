@@ -94,7 +94,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════
           HERO
       ══════════════════════════════════════════════════════ */}
-      <section className="relative h-screen flex flex-col overflow-hidden">
+      <section className="relative h-screen min-h-100 flex flex-col overflow-hidden">
 
         {/* Aerial background video */}
         <video
