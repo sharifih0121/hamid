@@ -133,10 +133,15 @@ export default function Home() {
         <div className="relative z-10 flex-1 flex items-end">
           <div className="w-full bg-white px-8 lg:px-16 py-14 grid md:grid-cols-2 gap-4 items-start">
 
-            {/* Left — title */}
-            <h1 className="text-3xl lg:text-4xl font-bold leading-snug text-gray-900">
-              Welcome to <br /> Hamid&apos;s Atelier!
-            </h1>
+            {/* Left — title + verse */}
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold leading-snug text-gray-900">
+                Welcome to <br /> Hamid&apos;s Atelier!
+              </h1>
+              <blockquote style={{ marginTop: '1.5rem', fontSize: '1.1rem', color: '#333333' }} className="italic leading-relaxed text-balance">
+                &ldquo;Whatever you do, work at it with all your heart, as working for the Lord, not for human masters&rdquo; &mdash; Colossians 3:23
+              </blockquote>
+            </div>
 
             {/* Right — body copy */}
             <p className="text-gray-900 leading-relaxed text-balance" style={{ fontSize: '1.2rem' }}>
