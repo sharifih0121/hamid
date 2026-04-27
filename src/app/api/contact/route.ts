@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
+import { RecaptchaEnterpriseServiceClient } from '@google-cloud/recaptcha-enterprise'
 
 const RECAPTCHA_SITE_KEY = '6LdPbs0sAAAAAHd1MFgSGJn9uECTCyiXaetbrnyW'
+const RECAPTCHA_PROJECT_ID = 'recaptcha-enterp-1709321842821'
 const TO_EMAIL = 'hamid54888@gmail.com'
 const FROM_EMAIL = 'connect@hamidsharifi.com'
 const FROM_NAME = "Hamid's Atelier"
@@ -24,24 +26,36 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'reCAPTCHA token missing.' }, { status: 400 })
     }
 
-    const verifyRes = await fetch(
-      `https://recaptchaenterprise.googleapis.com/v1/projects/${process.env.RECAPTCHA_PROJECT_ID}/assessments?key=${process.env.RECAPTCHA_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event: { token, siteKey: RECAPTCHA_SITE_KEY, expectedAction: 'CONTACT' },
-        }),
-      }
-    )
-    const verifyData = await verifyRes.json()
+    const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON ?? '{}')
+    const client = new RecaptchaEnterpriseServiceClient({ credentials })
+    const projectPath = client.projectPath(RECAPTCHA_PROJECT_ID)
 
-    if (
-      !verifyData.tokenProperties?.valid ||
-      (verifyData.riskAnalysis?.score ?? 0) < 0.5
-    ) {
+    const [response] = await client.createAssessment({
+      assessment: {
+        event: { token, siteKey: RECAPTCHA_SITE_KEY },
+      },
+      parent: projectPath,
+    })
+
+    await client.close()
+
+    if (!response.tokenProperties?.valid) {
       return NextResponse.json(
         { error: 'reCAPTCHA verification failed. Please try again.' },
+        { status: 400 }
+      )
+    }
+
+    if (response.tokenProperties.action !== 'CONTACT') {
+      return NextResponse.json(
+        { error: 'reCAPTCHA action mismatch.' },
+        { status: 400 }
+      )
+    }
+
+    if ((response.riskAnalysis?.score ?? 0) < 0.5) {
+      return NextResponse.json(
+        { error: 'reCAPTCHA score too low. Please try again.' },
         { status: 400 }
       )
     }
