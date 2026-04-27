@@ -11,7 +11,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://hamidsharifi.com"),
+  metadataBase: new URL("https://www.hamidsharifi.com"),
   title: "Hamid Sharifi — Designer & Developer | Winston-Salem, NC",
   description:
     "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC. Serving Winston-Salem, Greensboro, High Point, Kernersville, Clemmons, and surrounding North Carolina communities.",
@@ -21,11 +21,11 @@ export const metadata: Metadata = {
     title: "Hamid Sharifi — Designer & Developer | Winston-Salem, NC",
     description:
       "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC. Serving Winston-Salem, Greensboro, High Point, Kernersville, Clemmons, and surrounding North Carolina communities.",
-    url: "https://hamidsharifi.com",
+    url: "https://www.hamidsharifi.com",
     siteName: "Hamid Sharifi",
     images: [
       {
-        url: "/hamidsharifi-og.png",
+        url: "https://www.hamidsharifi.com/hamidsharifi-og.png",
         width: 1200,
         height: 630,
         alt: "Hamid Sharifi — Designer & Developer",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Hamid Sharifi — Designer & Developer | Winston-Salem, NC",
     description:
       "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC.",
-    images: ["/hamidsharifi-og.png"],
+    images: ["https://www.hamidsharifi.com/hamidsharifi-og.png"],
   },
 };
 
@@ -47,12 +47,12 @@ const schemaData = {
   "@graph": [
     {
       "@type": "Person",
-      "@id": "https://hamidsharifi.com/#person",
+      "@id": "https://www.hamidsharifi.com/#person",
       name: "Hamid Sharifi",
       jobTitle: "Designer & Developer",
       description:
         "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC.",
-      url: "https://hamidsharifi.com",
+      url: "https://www.hamidsharifi.com",
       email: "hamid@tandem78.com",
       address: {
         "@type": "PostalAddress",
@@ -70,13 +70,13 @@ const schemaData = {
     },
     {
       "@type": "ProfessionalService",
-      "@id": "https://hamidsharifi.com/#business",
+      "@id": "https://www.hamidsharifi.com/#business",
       name: "Hamid Sharifi — Designer & Developer",
       description:
         "Graphic design, UI/UX, and web development services in Winston-Salem, NC. Serving Winston-Salem, Greensboro, High Point, Kernersville, Clemmons, Lewisville, and all of North Carolina.",
-      url: "https://hamidsharifi.com",
+      url: "https://www.hamidsharifi.com",
       email: "hamid@tandem78.com",
-      founder: { "@id": "https://hamidsharifi.com/#person" },
+      founder: { "@id": "https://www.hamidsharifi.com/#person" },
       address: {
         "@type": "PostalAddress",
         addressLocality: "Winston-Salem",
