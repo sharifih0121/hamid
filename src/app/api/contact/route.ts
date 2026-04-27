@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 
-const RECAPTCHA_SECRET = '6LcsZQolAAAAAKTwAew19Ek_08hSgA0Op8V4uSRK'
+const RECAPTCHA_SITE_KEY = '6LdPbs0sAAAAAHd1MFgSGJn9uECTCyiXaetbrnyW'
 const TO_EMAIL = 'hamid54888@gmail.com'
 const FROM_EMAIL = 'connect@hamidsharifi.com'
 const FROM_NAME = "Hamid's Atelier"
@@ -24,14 +24,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'reCAPTCHA token missing.' }, { status: 400 })
     }
 
-    const verifyRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ secret: RECAPTCHA_SECRET, response: token }),
-    })
+    const verifyRes = await fetch(
+      `https://recaptchaenterprise.googleapis.com/v1/projects/${process.env.RECAPTCHA_PROJECT_ID}/assessments?key=${process.env.RECAPTCHA_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: { token, siteKey: RECAPTCHA_SITE_KEY, expectedAction: 'CONTACT' },
+        }),
+      }
+    )
     const verifyData = await verifyRes.json()
 
-    if (!verifyData.success) {
+    if (
+      !verifyData.tokenProperties?.valid ||
+      (verifyData.riskAnalysis?.score ?? 0) < 0.5
+    ) {
       return NextResponse.json(
         { error: 'reCAPTCHA verification failed. Please try again.' },
         { status: 400 }

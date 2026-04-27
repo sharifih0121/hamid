@@ -2,21 +2,29 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import ReCAPTCHA from 'react-google-recaptcha'
 import Chatbot from '@/components/Chatbot'
 import HeroRipple from '@/components/HeroRipple'
 
+declare global {
+  interface Window {
+    grecaptcha: {
+      enterprise: {
+        ready: (cb: () => void) => void
+        execute: (siteKey: string, options: { action: string }) => Promise<string>
+      }
+    }
+  }
+}
+
 const AERIAL_VIDEO = '/hamid-video-bg.mp4'
-const RECAPTCHA_SITE_KEY = '6LcsZQolAAAAAO8G-dPv6EaymZH2AxSTUYB1HgUZ'
+const RECAPTCHA_SITE_KEY = '6LdPbs0sAAAAAHd1MFgSGJn9uECTCyiXaetbrnyW'
 
 export default function Home() {
   const [formOpen, setFormOpen] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
 
-  const recaptchaRef = useRef<ReCAPTCHA>(null)
   const firstFieldRef = useRef<HTMLSelectElement>(null)
 
   /* Lock scroll when form open */
@@ -41,31 +49,28 @@ export default function Home() {
     setFormOpen(false)
     setError('')
     setSubmitted(false)
-    recaptchaRef.current?.reset()
-    setCaptchaToken(null)
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
-
-    if (!captchaToken) {
-      setError('Please complete the reCAPTCHA before submitting.')
-      return
-    }
+    setLoading(true)
 
     const form = e.currentTarget
-    const data = {
-      token: captchaToken,
-      service: (form.elements.namedItem('service') as HTMLSelectElement).value,
-      firstName: (form.elements.namedItem('firstName') as HTMLInputElement).value,
-      lastName: (form.elements.namedItem('lastName') as HTMLInputElement).value,
-      email: (form.elements.namedItem('email') as HTMLInputElement).value,
-      howFound: (form.elements.namedItem('howFound') as HTMLTextAreaElement).value,
-    }
 
-    setLoading(true)
     try {
+      await new Promise<void>((resolve) => window.grecaptcha.enterprise.ready(resolve))
+      const token = await window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, { action: 'CONTACT' })
+
+      const data = {
+        token,
+        service: (form.elements.namedItem('service') as HTMLSelectElement).value,
+        firstName: (form.elements.namedItem('firstName') as HTMLInputElement).value,
+        lastName: (form.elements.namedItem('lastName') as HTMLInputElement).value,
+        email: (form.elements.namedItem('email') as HTMLInputElement).value,
+        howFound: (form.elements.namedItem('howFound') as HTMLTextAreaElement).value,
+      }
+
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,8 +80,6 @@ export default function Home() {
 
       if (!res.ok) {
         setError(json.error || 'Something went wrong. Please try again.')
-        recaptchaRef.current?.reset()
-        setCaptchaToken(null)
       } else {
         setSubmitted(true)
         setTimeout(closeForm, 3000)
@@ -272,14 +275,6 @@ export default function Home() {
                   className="w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none resize-none py-1" style={{ fontSize: '1.1rem' }}
                 />
               </div>
-
-              {/* reCAPTCHA v2 */}
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={RECAPTCHA_SITE_KEY}
-                onChange={(token) => { setCaptchaToken(token); setError('') }}
-                onExpired={() => setCaptchaToken(null)}
-              />
 
               {/* Error message */}
               {error && (

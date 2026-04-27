@@ -138,6 +138,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
         />
         <Script
+          id="recaptcha-enterprise"
+          strategy="beforeInteractive"
+          src="https://www.google.com/recaptcha/enterprise.js?render=6LdPbs0sAAAAAHd1MFgSGJn9uECTCyiXaetbrnyW"
+        />
+        <Script
           id="google-tag-manager"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
