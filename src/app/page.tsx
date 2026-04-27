@@ -140,7 +140,7 @@ export default function Home() {
             <h1 className="text-3xl lg:text-4xl font-bold leading-snug text-gray-900">
               Welcome to <br /> Hamid&apos;s Atelier!
             </h1>
-            <blockquote style={{ marginTop: '1.5rem', fontSize: '1.1rem', color: '#333333' }} className="italic leading-relaxed text-balance">
+            <blockquote style={{ marginTop: '1.5rem', fontSize: '1rem', color: '#333333' }} className="leading-relaxed text-balance">
               &ldquo;Whatever you do, work at it with all your heart, as working for the Lord, not for human masters&rdquo; &mdash; Colossians 3:23
             </blockquote>
           </div>
