@@ -94,7 +94,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════
           HERO
       ══════════════════════════════════════════════════════ */}
-      <section className="relative flex flex-col overflow-hidden md:h-screen" style={{ minHeight: '400px' }}>
+      <section aria-labelledby="hero-heading" className="relative flex flex-col overflow-hidden md:h-screen" style={{ minHeight: '400px' }}>
 
         {/* Aerial background video */}
         <video
@@ -112,7 +112,7 @@ export default function Home() {
         <HeroRipple />
 
         {/* Navbar */}
-        <nav className="relative z-20 flex items-center justify-between px-8 lg:px-14 pt-7">
+        <nav aria-label="Main navigation" className="relative z-20 flex items-center justify-between px-8 lg:px-14 pt-7">
           <Image
             src="/logo.svg"
             alt="HAMID"
@@ -137,7 +137,7 @@ export default function Home() {
 
           {/* Left — title + verse */}
           <div>
-            <h1 className="text-3xl lg:text-4xl font-bold leading-snug text-gray-900">
+            <h1 id="hero-heading" className="text-3xl lg:text-4xl font-bold leading-snug text-gray-900">
               Welcome to <br /> Hamid&apos;s Atelier!
             </h1>
             <blockquote style={{ marginTop: '1.5rem', fontSize: '1rem', color: '#333333' }} className="leading-relaxed text-balance">
@@ -197,7 +197,7 @@ export default function Home() {
           {submitted ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-6">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
               </div>
@@ -205,7 +205,7 @@ export default function Home() {
               <p className="text-gray-500 text-sm">I&apos;ll get back to you within 24 hours.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+            <form onSubmit={handleSubmit} aria-label="Become a client form" className="space-y-8" noValidate>
 
               {/* Service */}
               <div className="border-b border-gray-300 focus-within:border-gray-900 transition-colors pb-1">
@@ -214,6 +214,7 @@ export default function Home() {
                   ref={firstFieldRef}
                   required
                   defaultValue=""
+                  aria-label="Select your preferred service"
                   className="w-full bg-transparent text-gray-600 focus:outline-none py-1 appearance-none cursor-pointer" style={{ fontSize: '1.1rem' }}
                 >
                   <option value="" disabled>Select your preferred service:</option>
@@ -232,6 +233,7 @@ export default function Home() {
                   name="firstName"
                   required
                   placeholder="First Name*"
+                  aria-label="First name"
                   className="w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none py-1" style={{ fontSize: '1.1rem' }}
                 />
               </div>
@@ -243,6 +245,7 @@ export default function Home() {
                   name="lastName"
                   required
                   placeholder="Last Name*"
+                  aria-label="Last name"
                   className="w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none py-1" style={{ fontSize: '1.1rem' }}
                 />
               </div>
@@ -254,6 +257,7 @@ export default function Home() {
                   name="email"
                   required
                   placeholder="Email*"
+                  aria-label="Email address"
                   className="w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none py-1" style={{ fontSize: '1.1rem' }}
                 />
               </div>
@@ -264,6 +268,7 @@ export default function Home() {
                   name="howFound"
                   rows={3}
                   placeholder="How did you find me?"
+                  aria-label="How did you find me"
                   className="w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none resize-none py-1" style={{ fontSize: '1.1rem' }}
                 />
               </div>
@@ -278,7 +283,7 @@ export default function Home() {
 
               {/* Error message */}
               {error && (
-                <p className="text-sm text-red-600 font-medium">{error}</p>
+                <p role="alert" className="text-sm text-red-600 font-medium">{error}</p>
               )}
 
               {/* Submit */}
