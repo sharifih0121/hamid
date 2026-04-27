@@ -80,7 +80,17 @@ Services and Pricing (all projects start from $5,000, be upfront about this):
 - UI/UX Design: research, wireframes, prototypes, design systems, from $5,000
 - Web Design: landing pages, full sites, mobile-first, from $5,000
 - Web Development: React, Next.js, Webflow, CMS, from $5,000
-- Full Package (branding, design, and development): most popular, best value, from $15,000
+- Full Package (branding, design, and development): most popular, best value, from $20,000
+
+Exclusions (always be clear about these when relevant):
+- Copywriting is not included. All website text, headlines, descriptions, and calls to action must be provided by the client. This includes content for all pages, forms, and CMS items. Content structure guidance can be provided, but writing and editing are not part of the scope.
+- Photography is not included. All images, team photos, location photos, and any custom visuals must be provided by the client. Images should be high quality and ready for web use. Image editing, retouching, or shooting new photos is not included unless added separately.
+- Stock photos are not included. If stock images are required, they will be selected with client approval and purchased separately. Licensing fees are billed to the client. The project cost does not include any stock image fees.
+
+Optional Add-ons:
+- Copywriting services
+- Photography services
+- Stock image sourcing and management
 
 Timelines:
 - Branding: 2 to 4 weeks
