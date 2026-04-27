@@ -17,6 +17,29 @@ export const metadata: Metadata = {
     "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC. Serving Winston-Salem, Greensboro, High Point, Kernersville, Clemmons, and surrounding North Carolina communities.",
   keywords:
     "graphic designer Winston-Salem NC, web designer Winston-Salem, UI UX designer North Carolina, web developer Winston-Salem, branding Greensboro NC, web design High Point NC, graphic design Kernersville, web development Clemmons NC, logo design North Carolina, Hamid Sharifi designer",
+  openGraph: {
+    title: "Hamid Sharifi — Designer & Developer | Winston-Salem, NC",
+    description:
+      "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC. Serving Winston-Salem, Greensboro, High Point, Kernersville, Clemmons, and surrounding North Carolina communities.",
+    url: "https://hamidsharifi.com",
+    siteName: "Hamid Sharifi",
+    images: [
+      {
+        url: "/hamidsharifi-og.png",
+        width: 1200,
+        height: 630,
+        alt: "Hamid Sharifi — Designer & Developer",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hamid Sharifi — Designer & Developer | Winston-Salem, NC",
+    description:
+      "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC.",
+    images: ["/hamidsharifi-og.png"],
+  },
 };
 
 const schemaData = {
