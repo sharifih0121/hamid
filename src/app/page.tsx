@@ -290,6 +290,14 @@ export default function Home() {
                 {loading ? 'Sending…' : 'Submit'}
               </button>
 
+              <p className="text-xs text-gray-400 leading-relaxed">
+                This site is protected by reCAPTCHA Enterprise and the Google{' '}
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600">Privacy Policy</a>{' '}
+                and{' '}
+                <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600">Terms of Service</a>{' '}
+                apply.
+              </p>
+
             </form>
           )}
         </div>
