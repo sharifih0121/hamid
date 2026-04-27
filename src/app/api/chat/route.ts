@@ -80,7 +80,7 @@ Services and Pricing (all projects start from $5,000, be upfront about this):
 - UI/UX Design: research, wireframes, prototypes, design systems, from $5,000
 - Web Design: landing pages, full sites, mobile-first, from $5,000
 - Web Development: React, Next.js, Webflow, CMS, from $5,000
-- Full Package (branding, design, and development): most popular, best value, from $12,000
+- Full Package (branding, design, and development): most popular, best value, from $15,000
 
 Timelines:
 - Branding: 2 to 4 weeks
