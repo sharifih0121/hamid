@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: "Hamid Sharifi",
     images: [
       {
-        url: "https://www.hamidsharifi.com/hamidsharifi-og.png",
+        url: "https://www.hamidsharifi.com/hamidsharifi-og.jpg",
         width: 1200,
         height: 630,
         alt: "Hamid Sharifi — Designer & Developer",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: "Hamid Sharifi | Web Designer and Developer in Winston Salem NC",
     description:
       "Web designer and developer based in Winston Salem NC. I build fast, accessible websites with strong UI UX and clean code. Serving Winston Salem, Greensboro, High Point, and nearby areas.",
-    images: ["https://www.hamidsharifi.com/hamidsharifi-og.png"],
+    images: ["https://www.hamidsharifi.com/hamidsharifi-og.jpg"],
   },
 };
 
