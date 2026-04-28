@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-const AERIAL_VIDEO = '/hamid-video-bg.mp4'
+const AERIAL_VIDEO = '/hamid-video-bg_1.mp4'
 
 export default function HeroVideo() {
   const [videoLoaded, setVideoLoaded] = useState(false)
