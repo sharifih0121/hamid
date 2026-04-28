@@ -11,15 +11,15 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.hamidsharifi.com"),
-  title: "Hamid Sharifi — Designer & Developer | Winston-Salem, NC",
+  title: "Hamid Sharifi | Web Designer and Developer in Winston Salem NC",
   description:
-    "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC. Serving Winston-Salem, Greensboro, High Point, Kernersville, Clemmons, and surrounding North Carolina communities.",
+    "Web designer and developer based in Winston Salem NC. I build fast, accessible websites with strong UI UX and clean code. Serving Winston Salem, Greensboro, High Point, and nearby areas.",
   keywords:
     "graphic designer Winston-Salem NC, web designer Winston-Salem, UI UX designer North Carolina, web developer Winston-Salem, branding Greensboro NC, web design High Point NC, graphic design Kernersville, web development Clemmons NC, logo design North Carolina, Hamid Sharifi designer",
   openGraph: {
-    title: "Hamid Sharifi — Designer & Developer | Winston-Salem, NC",
+    title: "Hamid Sharifi | Web Designer and Developer in Winston Salem NC",
     description:
-      "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC. Serving Winston-Salem, Greensboro, High Point, Kernersville, Clemmons, and surrounding North Carolina communities.",
+      "Web designer and developer based in Winston Salem NC. I build fast, accessible websites with strong UI UX and clean code. Serving Winston Salem, Greensboro, High Point, and nearby areas.",
     url: "https://www.hamidsharifi.com",
     siteName: "Hamid Sharifi",
     images: [
@@ -34,9 +34,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hamid Sharifi — Designer & Developer | Winston-Salem, NC",
+    title: "Hamid Sharifi | Web Designer and Developer in Winston Salem NC",
     description:
-      "10+ years of experience in graphic design, UI/UX, and web development. Based in Winston-Salem, NC.",
+      "Web designer and developer based in Winston Salem NC. I build fast, accessible websites with strong UI UX and clean code. Serving Winston Salem, Greensboro, High Point, and nearby areas.",
     images: ["https://www.hamidsharifi.com/hamidsharifi-og.png"],
   },
 };
