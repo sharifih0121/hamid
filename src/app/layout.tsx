@@ -151,13 +151,6 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-        <div
-          aria-hidden="true"
-          style={{ display: 'none' }}
-          dangerouslySetInnerHTML={{
-            __html: `<!--\n  hamidsharifi.com\n  Last published: ${new Date().toUTCString()}\n  © ${new Date().getFullYear()} Hamid Sharifi. All rights reserved.\n-->`,
-          }}
-        />
         {children}
       </body>
     </html>
