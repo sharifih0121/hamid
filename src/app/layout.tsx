@@ -125,6 +125,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={montserrat.variable}>
       <head>
+        <meta
+          name="build-info"
+          content={`hamidsharifi.com — Last published: ${new Date().toUTCString()} — © ${new Date().getFullYear()} Hamid Sharifi. All rights reserved.`}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
