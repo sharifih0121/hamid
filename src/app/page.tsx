@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import HeroVideo from '@/components/HeroVideo'
 import ContactPanel from '@/components/ContactPanel'
+import FaqPanel from '@/components/FaqPanel'
 import ChatbotLoader from '@/components/ChatbotLoader'
 
 export default function Home() {
@@ -27,7 +28,10 @@ export default function Home() {
             className="brightness-0 invert h-7 w-auto"
             priority
           />
-          <ContactPanel />
+          <div className="flex items-center gap-2">
+            <ContactPanel />
+            <FaqPanel />
+          </div>
         </nav>
 
         {/* Video spacer — pushes intro below, ensures video is visible */}

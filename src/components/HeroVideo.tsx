@@ -18,7 +18,8 @@ export default function HeroVideo() {
     const isSlow =
       conn &&
       (conn.saveData || ['slow-2g', '2g', '3g'].includes(conn.effectiveType))
-    if (!isSlow) setShowVideo(true)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (isSlow !== true) setShowVideo(true)
   }, [])
 
   const showPlaceholder = !videoLoaded || videoError || !showVideo

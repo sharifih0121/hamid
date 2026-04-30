@@ -68,6 +68,100 @@ const schemaData = {
       ],
     },
     {
+      "@type": "FAQPage",
+      "@id": "https://www.hamidsharifi.com/#faq",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "How much does a website cost?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Every project is different. Pricing depends on scope, number of pages, custom features, and timeline. I provide a detailed quote after a brief discovery call.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How long does it take to build a website?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "A typical website takes 4–8 weeks from kickoff to launch. Projects with more complex functionality can take longer. You'll receive a clear timeline before any work begins.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Do you provide photos, images, and website copy (text)?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Great content makes or breaks a website. If you don't have professional photos or written copy ready, you can hire someone yourself — or I can introduce you to trusted photographers and copywriters I've worked with.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What do I need to provide before we start?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Typically: your brand assets (logo, colours, fonts), any existing content (text and photos), a few websites you like the look of, and a clear idea of your goals.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Will my website be mobile-friendly?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Absolutely. Every website I build is fully responsive and tested across phones, tablets, and desktops to make sure it looks great and works perfectly on every screen size.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can I update the website myself after it's built?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. Depending on your needs I can build on a CMS that lets you edit content without touching code. I'll also walk you through everything at handover so you feel confident managing it.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Do you handle hosting and domain setup?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. I can recommend reliable hosting providers, help you register a domain, and handle the full technical setup so you don't have to deal with any of it.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What happens after the website launches?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "I include a post-launch support window to catch any issues. After that I offer ongoing maintenance packages covering updates, security monitoring, and performance checks.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Will my website be optimised for search engines (SEO)?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. Every site I build follows SEO best practices: clean code, fast load times, proper meta tags, structured data, and mobile optimisation. For deeper SEO campaigns I can refer you to a specialist.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can you redesign my existing website?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Absolutely. Whether you need a full visual overhaul or improvements to performance and UX, I can work with your existing content or start fresh — whichever makes more sense for your goals.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What does the payment process look like?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Projects are split into milestones: a deposit upfront to kick things off, a payment at design approval, and the final payment before launch. I accept bank transfer and major credit cards.",
+          },
+        },
+      ],
+    },
+    {
       "@type": "ProfessionalService",
       "@id": "https://www.hamidsharifi.com/#business",
       name: "Hamid Sharifi — Designer & Developer",
