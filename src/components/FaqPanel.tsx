@@ -153,7 +153,7 @@ export default function FaqPanel() {
         onClick={() => setOpen(true)}
         title="FAQs"
         aria-label="FAQs"
-        className="bg-white hover:bg-black active:scale-110 text-black hover:text-white text-sm font-bold px-6 py-2.5 rounded border-2 border-black transition-all duration-200 tracking-wide"
+        className="bg-white hover:bg-black active:scale-110 text-black hover:text-white text-sm font-bold px-3 sm:px-6 py-2.5 rounded border-2 border-black transition-all duration-200 tracking-wide whitespace-nowrap"
       >
         ?
       </button>

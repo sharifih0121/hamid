@@ -24,6 +24,7 @@ export default function ContactPanel() {
   const [mounted, setMounted] = useState(false)
   const firstFieldRef = useRef<HTMLSelectElement>(null)
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), [])
 
   useEffect(() => {
@@ -209,7 +210,7 @@ export default function ContactPanel() {
     <>
       <button
         onClick={() => setFormOpen(true)}
-        className="bg-white hover:bg-black active:scale-110 text-black hover:text-white text-sm font-bold px-6 py-2.5 rounded border-2 border-black transition-all duration-200 tracking-wide"
+        className="bg-white hover:bg-black active:scale-110 text-black hover:text-white text-sm font-bold px-3 sm:px-6 py-2.5 rounded border-2 border-black transition-all duration-200 tracking-wide whitespace-nowrap"
       >
         Get Started
       </button>
