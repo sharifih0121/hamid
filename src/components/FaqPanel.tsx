@@ -6,19 +6,19 @@ import { createPortal } from 'react-dom'
 const FAQS = [
   {
     q: 'How much does a website cost?',
-    a: "Every project is different. Pricing depends on scope, number of pages, custom features, and timeline. I provide a detailed quote after a brief discovery call — reach out via the Get Started form to kick things off.",
+    a: "Every project is different. Pricing depends on scope, number of pages, custom features, and timeline. I'll provide a clear, detailed quote after a brief discovery call.",
   },
   {
     q: 'How long does it take to build a website?',
-    a: "A typical website takes 4–8 weeks from kickoff to launch. Projects with more complex functionality can take longer. You'll receive a clear timeline before any work begins.",
+    a: "A typical website takes 4 to 8 weeks from kickoff to launch. More complex projects with custom functionality can take longer. You'll receive a clear timeline before any work begins.",
   },
   {
     q: 'Do you provide photos, images, and website copy (text)?',
-    a: "Great content makes or breaks a website. If you don't have professional photos or written copy ready, you can hire someone yourself — or I can introduce you to trusted photographers and copywriters I've worked with. Either way, I'll guide you on exactly what's needed.",
+    a: "Content is what makes a website truly work. If you don't have professional photography or written copy ready, you have a few options: you can hire your own, or I can connect you with trusted photographers and copywriters from my network whose fees are separate and billed directly to you. Where stock imagery makes sense, I can source it for you and that cost is also passed on to you at cost. I'll advise on exactly what you need from day one.",
   },
   {
     q: 'What do I need to provide before we start?',
-    a: "Typically: your brand assets (logo, colours, fonts), any existing content (text and photos), a few websites you like the look of, and a clear idea of your goals. Don't worry if you're missing pieces — we'll work through it together.",
+    a: "Typically: your brand assets (logo, colours, fonts), any existing content (text and photos), a few websites you like the look of, and a clear idea of your goals. Don't worry if you're missing some of it. We'll figure it out together.",
   },
   {
     q: 'Will my website be mobile-friendly?',
@@ -26,27 +26,27 @@ const FAQS = [
   },
   {
     q: "Can I update the website myself after it's built?",
-    a: "Yes. Depending on your needs I can build on a CMS that lets you edit content without touching code. I'll also walk you through everything at handover so you feel confident managing it.",
+    a: "Yes. Depending on your needs, I can build on a CMS that lets you edit content without touching code. I'll also walk you through everything at handover so you feel confident managing it.",
   },
   {
     q: 'Do you handle hosting and domain setup?',
-    a: "Yes. I can recommend reliable hosting providers, help you register a domain, and handle the full technical setup — so you don't have to deal with any of it.",
+    a: "Yes. I can recommend reliable hosting providers, help you register a domain, and handle the full technical setup so you don't have to deal with any of it.",
   },
   {
     q: 'What happens after the website launches?',
-    a: "I include a post-launch support window to catch any issues. After that I offer ongoing maintenance packages covering updates, security monitoring, and performance checks.",
+    a: "I include a post-launch support window to catch any issues. After that, I offer ongoing maintenance packages covering updates, security monitoring, and performance checks.",
   },
   {
     q: 'Will my website be optimised for search engines (SEO)?',
-    a: "Yes. Every site I build follows SEO best practices: clean code, fast load times, proper meta tags, structured data, and mobile optimisation. For deeper SEO campaigns — content strategy, link building — I can refer you to a specialist.",
+    a: "Yes. Every site I build follows SEO best practices: clean code, fast load times, proper meta tags, structured data, and mobile optimisation. For deeper SEO work like content strategy or link building, I can refer you to a specialist.",
   },
   {
     q: 'Can you redesign my existing website?',
-    a: "Absolutely. Whether you need a full visual overhaul or improvements to performance and UX, I can work with your existing content or start fresh — whichever makes more sense for your goals.",
+    a: "Absolutely. Whether you need a full visual overhaul or improvements to performance and UX, I can work with your existing content or start completely fresh. We'll figure out which approach makes more sense for your goals.",
   },
   {
     q: 'What does the payment process look like?',
-    a: 'Projects are split into milestones: a deposit upfront to kick things off, a payment at design approval, and the final payment before launch.',
+    a: 'Projects are split into milestones: a deposit upfront to kick things off, a payment at design approval, and the final payment before launch. I accept bank transfer and major credit cards.',
   },
 ]
 

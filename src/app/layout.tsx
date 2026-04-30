@@ -76,7 +76,7 @@ const schemaData = {
           name: "How much does a website cost?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Every project is different. Pricing depends on scope, number of pages, custom features, and timeline. I provide a detailed quote after a brief discovery call.",
+            text: "Every project is different. Pricing depends on scope, number of pages, custom features, and timeline. I'll provide a clear, detailed quote after a brief discovery call.",
           },
         },
         {
@@ -84,7 +84,7 @@ const schemaData = {
           name: "How long does it take to build a website?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "A typical website takes 4–8 weeks from kickoff to launch. Projects with more complex functionality can take longer. You'll receive a clear timeline before any work begins.",
+            text: "A typical website takes 4 to 8 weeks from kickoff to launch. More complex projects with custom functionality can take longer. You'll receive a clear timeline before any work begins.",
           },
         },
         {
@@ -92,7 +92,7 @@ const schemaData = {
           name: "Do you provide photos, images, and website copy (text)?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Great content makes or breaks a website. If you don't have professional photos or written copy ready, you can hire someone yourself — or I can introduce you to trusted photographers and copywriters I've worked with.",
+            text: "Content is what makes a website truly work. If you don't have professional photography or written copy ready, you can hire your own, or I can connect you with trusted photographers and copywriters from my network whose fees are billed directly to you. Where stock imagery makes sense, I can source it for you and that cost is also passed on to you at cost.",
           },
         },
         {
@@ -100,7 +100,7 @@ const schemaData = {
           name: "What do I need to provide before we start?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Typically: your brand assets (logo, colours, fonts), any existing content (text and photos), a few websites you like the look of, and a clear idea of your goals.",
+            text: "Typically: your brand assets (logo, colours, fonts), any existing content (text and photos), a few websites you like the look of, and a clear idea of your goals. Don't worry if you're missing some of it. We'll figure it out together.",
           },
         },
         {
@@ -116,7 +116,7 @@ const schemaData = {
           name: "Can I update the website myself after it's built?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Depending on your needs I can build on a CMS that lets you edit content without touching code. I'll also walk you through everything at handover so you feel confident managing it.",
+            text: "Yes. Depending on your needs, I can build on a CMS that lets you edit content without touching code. I'll also walk you through everything at handover so you feel confident managing it.",
           },
         },
         {
@@ -132,7 +132,7 @@ const schemaData = {
           name: "What happens after the website launches?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "I include a post-launch support window to catch any issues. After that I offer ongoing maintenance packages covering updates, security monitoring, and performance checks.",
+            text: "I include a post-launch support window to catch any issues. After that, I offer ongoing maintenance packages covering updates, security monitoring, and performance checks.",
           },
         },
         {
@@ -140,7 +140,7 @@ const schemaData = {
           name: "Will my website be optimised for search engines (SEO)?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Every site I build follows SEO best practices: clean code, fast load times, proper meta tags, structured data, and mobile optimisation. For deeper SEO campaigns I can refer you to a specialist.",
+            text: "Yes. Every site I build follows SEO best practices: clean code, fast load times, proper meta tags, structured data, and mobile optimisation. For deeper SEO work like content strategy or link building, I can refer you to a specialist.",
           },
         },
         {
@@ -148,7 +148,7 @@ const schemaData = {
           name: "Can you redesign my existing website?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Absolutely. Whether you need a full visual overhaul or improvements to performance and UX, I can work with your existing content or start fresh — whichever makes more sense for your goals.",
+            text: "Absolutely. Whether you need a full visual overhaul or improvements to performance and UX, I can work with your existing content or start completely fresh. We'll figure out which approach makes more sense for your goals.",
           },
         },
         {
